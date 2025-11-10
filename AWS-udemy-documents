@@ -1,0 +1,1084 @@
+IMA & AWS CLI
+Bài 12: IAM introduction: Users, Groups, Polices
+IAM = identity and Access Management, Global service
+
+Bài 13: IAM Policies
+Step 1:
+Tìm kiếm IAM trên thanh search -> sau đó click vào Users bên thanh sidebar -> createa user ->
+                                * Specify user details -> User name (duyduc) -> tích chọn Provide user access to the AWS Management Console -> User type (tích chọn i want to create an IAM user) -> tích chọn Custom password và đặt mật khẩu và bỏ tích chọn User must create a new password at the next signin -> next
+
+Step 2:
+Click chọn Create group -> trong create user group -> User group name -> tích chọn AdministratorAccess -> Create User Group -> sau khi tạo xong sẽ tích chọn admin đã xuất hiện trong Group name -> xuống Tags chọn Add new tag -> key (department) && value-optional (Engineering) 
+
+Step 3:
+Sau khi đăng nhập xong có thể quay lại trang dashboard của IAM rồi -> Create trong Account Alias -> để edit lại Sign-in URL for IAM users in this account 
+
+-> Bài học rút ra trong bài này là phân quyền người dùng đã được tạo ra trong IAM user 
+
+Bài 14: IAM Policies
+IAM Policies (chính sách IAM) trong AWS được dùng để quản lý quyền truy cập (permissions) cho người dùng, nhóm, hoặc dịch vụ trong hệ thống AWS.
+
+Bài 15: IAM Policies Hands On
+// remove quyền của một User
+Vào User -> ở phần group click và số 1 ở dưới -> click vào admin -> tích chọn user ở dưới -> sau đó remove => dùng để xoá quyền của một user
+// Add thêm quyền cho một User
+Vào User đó trong Permisstions policies -> chọn Add permissions -> chọn Attach policies directly -> sẽ xuất hiện Permissions policies (tích chọn quyền theo yêu cầu) -> next
+// Có thể tạo group sau đó thêm User đó vào group
+vào User groups -> create group -> User group name (đặt tên group) -> ở Attach permissions policies - Optional tích chọn quyền (ví dụ AdministratorAccess) -> Create user group 
+-> sau khi tạo xong vào group đã tạo -> chọn Add users -> thêm user vào trong -> click Add users
+
+Bài 16: IAM MFA 
+=> Nói về bảo mật 
+
+Bài 17: IAM MFA Hands On
+- Vào Account settings bên thanh sidebar trong IAM -> click vào Edit -> sẽ xuất hiện Edit password policy -> custom password
+
+🧪 Bước 1: Truy cập trang quản lý IAM
+- Vào AWS Console: https://console.aws.amazon.com/
+- Gõ “IAM” trong thanh tìm kiếm và chọn dịch vụ IAM
+- Trong sidebar trái, chọn Users
+- Nhấp vào tên người dùng (IAM User) mà bạn muốn bật MFA
+
+🧪 Bước 2: Cấu hình MFA
+- Trong trang người dùng, chọn tab Security credentials
+- Kéo xuống phần Multi-factor authentication (MFA)
+- Nhấn Assign MFA device
+
+🧪 Bước 3: Chọn loại thiết bị
+- Chọn Authenticator app (ứng dụng xác thực) → Nhấn Next
+- Trên màn hình sẽ xuất hiện QR code
+
+🧪 Bước 4: Cài đặt trên điện thoại
+- Mở ứng dụng Google Authenticator hoặc Authy
+- Chọn “Add account” → Quét mã QR từ AWS Console
+- Ứng dụng sẽ tạo ra mã OTP (6 số, thay đổi mỗi 30 giây)
+
+🧪 Bước 5: Xác thực và hoàn tất
+- Quay lại AWS Console, nhập hai mã OTP liên tiếp từ app (phải chính xác)
+- Nhấn Assign MFA
+🎉 Hoàn tất! IAM User đó đã bật MFA.
+
+Bài 18: AWS Access Keys, CLI and SDK
+How can users access AWS ?
+To access AWS, you have three options
+   1. AWS Manament Console (protected by password + MFA)
+   2. AWS Command Line Interface (CLI): protected by access keys
+   3. AWS Software Developer Kit (SDK) - for code 
+
+Bài 19 + Bài 20 + Bài 21:
+How to install AWS CLI for windows , MacOs , Linux
+// Documents cài đặt cho 3 nền tảng trên
+https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+
+Bài 22: AWS CLI Hands On
+// Muốn tạo Access key 
+👤 Bước 2: Mở trang quản lý IAM
+
+- Trên thanh điều hướng, chọn Services → tìm và chọn IAM.
+- Trong thanh sidebar chọn Users.
+- Nhấp vào tên người dùng IAM mà bạn muốn tạo Access Key.
+
+🔑 Bước 3: Tạo Access Key
+- Trong trang chi tiết của user, chọn tab Security credentials.
+- Cuộn xuống phần Access keys.
+- Nhấn nút Create access key.
+- Trong bước chọn cách dùng:
+Nhấn Next và Create access key.
+
+// SSH vào server 
+- aws configure
+        Access Key ID: {điền Access key đã tạo}
+        Secret Access Key: {điền Secret Access Key đã tạo}
+        Region (ví dụ: ap-southeast-1)
+        Output format (ví dụ: json)
+- aws iam list-users // dùng để xem tất cà User 
+
+Bài 24: AWS CloudShell 
+Shell một biểu tượng nằm trên thanh header của aws -> click vào nó
+- Thao tác các lệnh tương tự như trên Ubuntu Linux
+
+Bài 25: IAM Roles for AWS Services
+- IAM Role for AWS Service là một vai trò (role) IAM mà bạn gán cho một dịch vụ AWS (như EC2, Lambda, ECS...) để cấp quyền truy cập đến các dịch vụ AWS khác
+
+Bài 26: IAM Roles Hands On
+- Vào Roles của IAM -> chọn Create Roles -> Chọn AWS service -> Use case (chọn dịch vụ như EC2 hoặc Lambda) -> Next
+- ở Permissions policies -> tìm kiếm trên thanh search (tuỳ chọn quyền bạn cho dịch vụ đó ví dụ như IAMReading) -> Next
+
+Bài 27: IAM Security Tools
+- IAM Security Tools
+Dùng để:
+* Tạo báo cáo CSV cho toàn bộ IAM user trong tài khoản AWS:
+* Lần cuối sử dụng password, access key
+* MFA đã bật chưa
+* Password cũ, hết hạn chưa…
+Mục đích:
+- Kiểm tra người dùng có tuân thủ bảo mật không, có đang dùng access key cũ/mất an toàn không.
+
+Bài 28: IAM Security Tools hands On
+- Vào User trong IAM - click vào một user bất kỳ -> chon Last Accessed => để xem hành động gần nhất 
+
+Bài 29: IAM Best Practice
+- không sử dụng tài khoản root ngoại trừ khi thiết lập tài khoản AWS
+- Một người dùng vật lý = Một người dùng AWS
+- Chỉ định người dùng vào nhóm và chỉ định quyền cho nhóm
+- Tạo mật khẩu mạnh 
+- Sử dụng và thực thi việc sử dụng Xác thực đa yếu tố
+- Tạo và sử dụng Vai trò để cấp quyền cho các dịch vụ AWS
+- Sử dụng Key cập để truy cập theo chương trình
+- Kiểm tra quyền của tài khoản của bạn bằng Báo cáo thông tin xác thực IAM & Cố vấn truy cập IAM
+- Không bao giờ chia sẻ tài khoản IAM users và Access Keys
+
+Bài 30: IAM Summary 
+- Users: mỗi IAM User được tạo ra cho một người thật cụ thể chứ không phải cho ứng dụng hay dịch vụ
+- Groups: Groups chỉ chứa Users
+- Policies:  JSON dùng để khai báo quyền (permissions) mà một user, group hoặc role được phép thực hiện trên AWS.
+- Roles: được tạo ra để EC2 hoặc dịch vụ AWS sử dụng
+- Security: MFA + Password Policy
+- AWS CLI: quản lý các dịch vụ AWS của bạn bằng cách sử dụng dòng lệnh
+
+// EC2 Fundamentals
+Bài 31: AWS Budget Setup
+- Vào user root -> click chọn account trên thanh header -> chọn Account -> kéo xuống IAM user and role access -> click chọn Edit -> tích chọn Activate IAM Access -> update
+- quay lại User IAM -> nhấn vào Accout và chọn Billing and Cost Management -> 
+- bên thanh sidebar -> kéo xuống Budgets -> click Create budget -> ở phần Email recipients (điền Email cần alert vào bên trong) -> Create Budget
+
+Bài 32: EC2 Basics
+- EC2 là một trong những sản phẩm phổ biến nhất trong AWS
+- EC2 viết tắt của Elastic Compute Cloud (Cơ sở hạ tầng)
+
+1. Renting virtual machines (EC2)
+👉 EC2 (Elastic Compute Cloud) cho phép bạn thuê máy ảo (virtual server) để chạy ứng dụng, web, backend...
+* Bạn có thể chọn cấu hình CPU, RAM, OS (Linux/Windows)
+* Trả phí theo giờ hoặc theo giây
+* Tương đương như thuê máy chủ ở trung tâm dữ liệu
+🖥️ Ví dụ: Chạy backend Java hoặc webserver Nginx trên EC2.
+
+2. Storing data on virtual drives (EBS)
+👉 EBS (Elastic Block Store) là ổ đĩa ảo gắn vào EC2.
+* Giống như ổ cứng của máy thật
+* Lưu trữ dữ liệu: database, file, app log
+* Có thể backup (snapshot), mở rộng dung lượng
+💾 Ví dụ: EC2 chạy MySQL, dữ liệu được lưu trên EBS.
+
+3. Distributing load across machines (ELB)
+👉 ELB (Elastic Load Balancer) giúp phân phối lưu lượng truy cập đến nhiều EC2.
+* Tự động chia tải giữa các server
+* Nếu 1 EC2 chết → ELB bỏ qua, chuyển lưu lượng sang EC2 khác
+Hỗ trợ HTTP(S), TCP, gRPC,...
+🌐 Ví dụ: Website có 3 EC2 → ELB chia đều lượt truy cập.
+
+4. Scaling the services using an auto scaling group (ASG)
+👉 ASG (Auto Scaling Group) giúp tự động tăng/giảm số lượng EC2 theo nhu cầu.
+* Nếu người dùng tăng → tự tạo thêm EC2
+* Nếu ít người dùng → giảm EC2 để tiết kiệm tiền
+* Kết hợp với CloudWatch (theo dõi CPU, RAM)
+📈 Ví dụ: Tăng EC2 khi CPU > 70% trong 5 phút.
+
+5. EFS là gì?
+👉 Amazon EFS là dịch vụ lưu trữ dạng tệp (file storage) có khả năng mở rộng linh hoạt, 
+cho phép nhiều EC2 instances cùng truy cập chung một hệ thống file, giống như chia sẻ ổ đĩa mạng (network drive).
+
+1. Operating System (OS): Linux, Windows, or Mac OS
+Đây là hệ điều hành bạn cài đặt trên EC2 instance.
+AWS hỗ trợ:
+- Linux: Amazon Linux, Ubuntu, Red Hat, SUSE, CentOS
+- Windows: Windows Server (2016, 2019, 2022…)
+- macOS: Mac EC2 dành cho phát triển ứng dụng iOS/macOS (giá rất cao)
+- Hệ điều hành quyết định cách bạn cài phần mềm, bảo mật và vận hành hệ thống.
+
+2. How much compute power & cores (CPU)
+- Bạn chọn loại EC2 instance (ví dụ: t3.micro, m5.large, c6a.xlarge,…)
+- Mỗi loại có số vCPU (virtual CPU) và sức mạnh xử lý khác nhau.
+Ví dụ:
+    * t2.micro → 1 vCPU
+    * m5.large → 2 vCPU
+    * c5.4xlarge → 16 vCPU, dành cho xử lý tính toán cao
+    💡 CPU càng nhiều, xử lý càng nhanh, nhưng giá cũng tăng.
+
+3. How much random-access memory (RAM)
+- Cùng với CPU, mỗi EC2 instance có một lượng RAM (bộ nhớ) cố định.
+- RAM giúp chạy ứng dụng, xử lý dữ liệu nhanh.
+- Ví dụ:
+    * t3.micro: 1 vCPU + 1 GB RAM
+    * m5.large: 2 vCPU + 8 GB RAM
+    * r6g.4xlarge: 16 vCPU + 128 GB RAM (dành cho hệ thống nhiều bộ nhớ)
+
+4. How much storage space
+4.1. Network-attached (EBS & EFS)
+- EBS (Elastic Block Store):
+  * Ổ đĩa block gắn vào EC2
+  * Dùng như ổ cứng C:\ hoặc /dev/xvda
+Có thể mở rộng, backup snapshot
+- EFS (Elastic File System):
+    * File system chia sẻ giữa nhiều EC2
+    * Dùng cho ứng dụng cần chia sẻ file hoặc logs
+
+4.2. Hardware (EC2 Instance Store)
+- Ổ đĩa vật lý gắn trực tiếp vào máy chủ vật lý chạy EC2
+- Nhanh hơn EBS nhưng:
+  * Dữ liệu mất khi tắt EC2
+  * Không backup được
+- Dùng cho cache, dữ liệu tạm thời
+
+5. Network card: speed of the card, Public IP address
+- Mỗi EC2 có card mạng ảo, băng thông phụ thuộc loại instance:
+    t3.micro → thấp (~5 Mbps)
+    c6i.4xlarge → ~10 Gbps
+- Bạn có thể gán public IP để truy cập từ Internet.
+- Hoặc gán Elastic IP (IP tĩnh) để giữ cố định.
+
+6. Firewall rules: security group
+- Security Group là tường lửa ảo cho EC2
+* Quy định:
+- Cổng nào được mở (22, 80, 443,...)
+- Ai được phép truy cập (IP hoặc CIDR)
+* Ví dụ:
+- Cho phép SSH từ IP bạn: TCP 22, Source: your-IP/32
+- Mở web: TCP 80, Source: 0.0.0.0/0
+
+7. Bootstrap script: EC2 User Data
+- User Data là shell script hoặc cloud-init bạn chèn vào lúc khởi tạo EC2.
+- Nó sẽ tự động chạy 1 lần duy nhất khi EC2 khởi động lần đầu.
+- Dùng để:
+    Cài app (Apache, Docker…)
+    Update hệ thống
+    Pull code từ Git
+
+Bài 33: Create an EC2 instance with EC2 User Data to have a Website Hands On
+- Vào màn hình console tìm -> EC2 -> Click instances bên thanh sidebar -> chọn launch instances
+- Name and tags (EC2_Ubuntu)
+- Quick Start (click chọn Ubuntu)
+- Key pair name - required (đặt tên instance_Key_DevOps_On_AWS) -> Create key pair
+- VPC - required (thay đổi thành devops-vpc bài trước đã tạo)
+- Subnet chọn devops-subnet-public2
+- Auto-assign public IP (chọn Enable)
+- Security group name - required (devops_sg)
+- configure storage (1x tăng lên 18) 
+- click launch instance để tạo máy chủ
+
+Bài 34: EC2 Instance Types Basics
+- Khi bạn tạo một EC2 instance trên AWS, bạn sẽ phải chọn Instance Type – đây là lựa chọn quan trọng vì nó quyết định:
+
+✅ CPU (số lõi, tốc độ)
+✅ RAM (bộ nhớ)
+✅ Băng thông mạng
+✅ Dung lượng lưu trữ tạm thời (nếu có)
+✅ Giá tiền bạn sẽ trả theo giờ hoặc theo giây
+✅ EC2 Instance Types – Tổng quan cơ bản
+EC2 Instance Types được chia thành nhiều "family" (họ), mỗi họ tối ưu cho một mục đích riêng.
+
+🔹 1. General Purpose – Cân bằng CPU, RAM
+- Family	Mục đích	Ví dụ loại
+- t	Tiết kiệm, tải nhẹ	t2.micro, t3.small
+- m	Đa năng	m5.large, m6i.xlarge
+
+📌 Dùng cho webserver, app nhỏ, dev/test
+
+🔹 2. Compute Optimized – Tối ưu CPU
+- Family	Mục đích	Ví dụ loại
+- c	Tính toán cao, xử lý mạnh	c5.large, c6g.2xlarge
+
+📌 Dùng cho web server có tải cao, xử lý nhiều yêu cầu/người dùng
+
+🔹 3. Memory Optimized – Tối ưu RAM
+- Family	Mục đích	Ví dụ loại
+- r	RAM lớn cho DB	r5.large, r6g.4xlarge
+- x, u	RAM cực lớn	x1e.32xlarge
+
+📌 Dùng cho database, in-memory cache (Redis, Memcached), xử lý dữ liệu lớn
+
+🔹 4. Storage Optimized – Tối ưu IOPS, disk
+- Family	Mục đích	Ví dụ loại
+- i	SSD cực nhanh	i3.large, i4i.xlarge
+- d	HDD lớn	d2.8xlarge
+
+📌 Dùng cho big data, log processing, ElasticSearch
+
+🔹 5. Accelerated Computing – GPU hoặc phần cứng đặc biệt
+- Family	Mục đích	Ví dụ loại
+- p	GPU cho ML/AI	p3.2xlarge, p4d.24xlarge
+- g	GPU cho game, đồ hoạ	g4dn.xlarge
+- f	FPGA (logic tùy biến)	f1.2xlarge
+
+📌 Dùng cho training AI/ML, rendering 3D, video, game streaming
+
+🔢 Kích thước instance (Size)
+- Mỗi loại family có các size khác nhau:
+
+Ký hiệu	Ý nghĩa
+- .micro	Nhỏ nhất (ít RAM, CPU)
+- .small, .medium	Trung bình
+- .large, .xlarge	Lớn hơn
+- 2xlarge, 4xlarge, 8xlarge, v.v.	Gấp nhiều lần về tài nguyên
+
+📌 Ví dụ: t3.micro (1 vCPU, 1GB RAM), m5.2xlarge (8 vCPU, 32GB RAM)
+
+💡 Cách chọn instance type
+- Nhu cầu	Instance đề xuất
+- Thử nghiệm, dev nhỏ	t2.micro hoặc t3.micro (nằm trong Free Tier)
+- Web server vừa	t3.medium hoặc m5.large
+- DB MySQL	r5.large hoặc r6g.large
+- Dự án AI	p3, g4
+- Game server	c5, c6i
+- ElasticSearch, log	i3, d2
+
+🧠 Tổng kết
+- Họ (family)	Dùng cho
+- t, m	Tổng quát
+- c	CPU-intensive
+- r, x	Memory-intensive
+- i, d	Storage-intensive
+- p, g, f	GPU, AI/ML, đồ họa
+
+Bài 35: Security Groups && Classic Ports Overview
+* Giới thiệu về Security Groups trong AWS
+✅ Security Group là gì?
+* Security Group là tường lửa ảo (virtual firewall) trong AWS, được gắn vào EC2 hoặc các dịch vụ khác như RDS, Lambda (vPC-based), ENI…
+
+* Nó giúp kiểm soát lưu lượng mạng vào (inbound) và ra (outbound) của tài nguyên AWS theo:
+
+- Giao thức (TCP, UDP, ICMP,…)
+- Cổng (Port: 22, 80, 443, …)
+
+* Nguồn hoặc đích (IP, CIDR, Security Group khác)
+
+📦 Đặc điểm chính của Security Group
+- Tính năng	Mô tả
+- Stateful	Tự động cho phép lưu lượng phản hồi, không cần rule ngược lại
+- Chỉ cho phép (allow)	Bạn chỉ có thể cho phép, không có khái niệm “deny”
+- Áp dụng theo instance	Có thể gắn 1 hoặc nhiều Security Group vào EC2 instance
+- Hoạt động ở layer 4	Kiểm soát theo giao thức và cổng, không theo hostname hay URL
+
+=> Chỉ cho phép từ bên ngoài truy cập vào bên trong khi bạn mở inbounds bên trong EC2
+
+
+Bài 36: Security Groups Hands On
+- Trong EC2 Ubuntu vừa tạo ở phần dưới có Security -> ở phía dưới có Security groups -> có thể nhấn vào để xem các IP và Port đã mở
+- bên cạnh thanh sidebar -> Network & Security ở phần Security Groups -> click vào sẽ thấy các Security group đã tạo -> có thể nhấn vào security groups để coi các port nào đã được mở
+          -> nếu muốn mở thêm port có thể mở thê port bằng cách Edit inbound rules và add rules để thêm port
+
+Bài 37: SSH Overview
+- SSH (Secure Shell) là giao thức mạng mã hóa dùng để:
+Truy cập từ xa vào máy chủ (remote login)
+Thực thi lệnh trên máy Linux từ xa
+Truyền file an toàn qua SFTP hoặc SCP
+
+Bài 38 + 39 + 40 + 41 SSH tools
+Bài 42: EC2 Instance Connect 
+- Connect bên trong EC2 instance 
+
+Bài 43: EC2 instance Roles Demo
+- vào EC2 -> chọn máy chủ cần cấp quyền -> chọn Action -> Security -> chọn Modify IAM ROLE -> IAM role -> chọn Security Groups -> sau đó Update IAM role
+=> Là IAM Role được gán cho EC2, giúp EC2 có thể tự động truy cập dịch vụ AWS khác (S3, CloudWatch, DynamoDB, v.v.) mà không cần gán Access Key thủ công.
+
+Bài 44: EC2 instance Purchasing Options
+💰 EC2 Instance Purchasing Options – Các lựa chọn mua EC2 trên AWS
+AWS cung cấp nhiều hình thức mua và sử dụng EC2 instance để bạn có thể tối ưu chi phí tùy theo nhu cầu:
+
+✅ 1. On-Demand Instances (Trả tiền theo giờ/giây – linh hoạt)
+Đặc điểm	Mô tả
+💸 Giá cao nhất	Nhưng không cam kết gì cả
+⏰ Trả theo giờ hoặc giây	Không cần cam kết lâu dài
+📦 Dễ dùng, dễ quản lý	Phù hợp để test, dev, workload không ổn định
+
+👉 Dùng khi bạn cần EC2 ngay lập tức, không rõ thời gian chạy là bao lâu.
+
+✅ 2. Reserved Instances (RI) (Đặt chỗ trước, cam kết sử dụng dài hạn)
+Đặc điểm	Mô tả
+💰 Giá rẻ hơn On-Demand (~30-72%)	Đổi lại phải cam kết dùng 1 năm hoặc 3 năm
+🧾 Trả một phần hoặc toàn bộ trước	Có 3 hình thức thanh toán: No Upfront, Partial, All Upfront
+🚫 Không thể hủy	Nhưng có thể đổi loại trong cùng family/zone (convertible RI)
+
+👉 Phù hợp với hệ thống chạy 24/7 như backend, web server cố định.
+
+✅ 3. Spot Instances (Đấu giá – cực rẻ)
+Đặc điểm	Mô tả
+💸 Giá rẻ hơn rất nhiều (~70-90%)	Nhưng AWS có thể thu hồi bất cứ lúc nào
+🚫 Không đảm bảo duy trì 100%	Bạn sẽ bị dừng nếu có người khác trả giá cao hơn
+🧠 Dùng cho batch jobs, ML training, CI/CD runners	Những workload tạm thời, không yêu cầu uptime cao
+
+👉 Phù hợp để tiết kiệm chi phí, nếu app có thể tự xử lý khi bị mất máy.
+
+✅ 4. Savings Plans (Linh hoạt hơn Reserved Instances)
+Đặc điểm	Mô tả
+💸 Cam kết sử dụng một mức tiền cố định/tháng	Ví dụ: cam kết dùng $200 EC2 mỗi tháng trong 1 năm
+🔁 Linh hoạt về instance type, size, region	Không khóa cứng như Reserved Instances
+📈 Dễ dự đoán ngân sách	Có thể áp dụng với Lambda, Fargate (tùy loại plan)
+
+👉 Phù hợp nếu bạn dùng EC2 thường xuyên nhưng muốn linh hoạt cấu hình.
+
+✅ 5. Dedicated Hosts / Dedicated Instances (Thuê nguyên máy vật lý)
+Loại	Mô tả
+Dedicated Instance	Máy vật lý chỉ có instance của bạn, nhưng AWS vẫn quản lý
+Dedicated Host	Bạn thuê hẳn máy vật lý → tự phân bổ EC2, tự license (VD: Windows, Oracle)
+
+👉 Phù hợp cho tuân thủ bảo mật, yêu cầu license riêng, hoặc hệ thống đặc biệt.
+
+Bài 45: IP Address Charges in AWS
+Trong AWS, IP address chủ yếu liên quan đến các địa chỉ sau:
+
+- Public IP (địa chỉ IP công cộng)
+- Elastic IP (địa chỉ IP tĩnh công cộng do bạn quản lý)
+- Private IP (IP nội bộ trong VPC)
+
+✅ 1. Public IP (Tạm thời – Auto-Assigned)
+Khi bạn khởi tạo EC2 mà không gán Elastic IP, AWS sẽ tự cấp một Public IPv4 tạm thời.
+
+⛔ Không bị tính phí
+⚠️ Nhưng IP này sẽ thay đổi nếu bạn stop/start lại EC2.
+🟢 Miễn phí, nhưng không ổn định (không dùng cho domain hoặc hệ thống cần IP cố định).
+
+✅ 2. Elastic IP (EIP) – IP tĩnh, bạn quản lý
+Là địa chỉ IP công cộng cố định gán cho EC2, Load Balancer, NAT Gateway,…
+
+✅ Miễn phí nếu:
+IP được gán cho một EC2 đang chạy
+Chỉ dùng 1 Elastic IP đầu tiên
+
+💸 Tính phí nếu:
+Trường hợp bị tính phí	Chi phí
+EIP không gán vào instance nào	$0.005/giờ ($3.6/tháng)
+EIP gán vào instance bị tắt (stopped)	~$0.005/giờ
+Sử dụng nhiều hơn 1 EIP cùng lúc	~$0.005/giờ cho mỗi EIP thứ 2 trở đi
+
+💡 AWS khuyến khích không giữ IP mà không dùng ⇒ vì vậy sẽ tính phí nếu bạn lãng phí IP.
+
+✅ 3. Private IP (IP nội bộ trong VPC)
+Được cấp tự động trong VPC (ví dụ: 10.0.0.0/16, 192.168.0.0/16)
+Không bị tính phí
+
+🟢 Miễn phí hoàn toàn – dùng cho giao tiếp nội bộ giữa các EC2, RDS, v.v.
+
+✅ 4. IPv6 Addresses
+AWS cung cấp miễn phí các địa chỉ IPv6 (vì IPv6 chưa khan hiếm như IPv4)
+Không bị tính phí
+
+Bài 46: Spot instance & Spot Fleet AWS 
+1. Spot Instance là gì?
+Spot Instance là loại EC2 bạn thuê với giá rẻ hơn rất nhiều (giảm đến 90%) so với On-Demand, bằng cách "đấu giá tài nguyên EC2 nhàn rỗi của AWS".
+
+💰 Giá siêu rẻ, nhưng có thể bị AWS thu hồi bất kỳ lúc nào nếu có người dùng khác trả giá cao hơn hoặc AWS cần lại tài nguyên.
+
+📌 Khi nào nên dùng Spot Instance?
+Tình huống	Có nên dùng Spot không?
+✅ Xử lý batch job	Rất nên – rẻ và chấp nhận mất
+✅ Training AI / ML	Rất nên – tiết kiệm GPU
+✅ CI/CD runners	Nên – nếu job có thể chạy lại
+❌ Web server production	Không – vì có thể bị dừng
+❌ Database, hệ thống cần ổn định	Không – cần uptime cao
+
+💥 Điều gì xảy ra khi bị thu hồi?
+AWS sẽ gửi thông báo trước 2 phút (spot instance termination notice)
+Bạn có thể dùng script để gracefully shutdown hoặc lưu tiến trình
+
+📊 Ví dụ giá Spot:
+Instance Type	On-Demand	Spot Price (ước tính)
+t3.large	$0.0832/h	~$0.024/h
+c6g.2xlarge	$0.272/h	~$0.081/h
+p3.2xlarge (GPU)	$3.06/h	~$0.90/h
+
+🔹 2. Spot Fleet là gì?
+Spot Fleet = Tập hợp nhiều Spot Instance + quản lý tự động hóa chọn loại máy và vùng (AZ) để đảm bảo khả năng chạy ổn định nhất với giá rẻ nhất.
+
+Tưởng tượng như một nhóm Spot Instance được AWS quản lý theo chiến lược tối ưu (về giá hoặc dung lượng).
+
+⚙️ Spot Fleet cho phép bạn:
+Chọn nhiều loại instance khác nhau (c5.large, m5.large, t3.medium, ...)
+
+Chọn nhiều Availability Zones
+
+AWS sẽ:
+
+Chọn các loại đang rẻ nhất, ổn định nhất
+
+Quản lý việc khởi tạo/thu hồi Spot instance
+
+Có thể dùng cho Auto Scaling Group, chạy ECS, EMR, v.v.
+
+Bài 47: EC2 instances Launch Types Hands On 
+- Hands-on các loại Launch Types của EC2 instances trong AWS,
+giúp bạn hiểu rõ cách tạo, cấu hình và sử dụng từng loại như On-Demand, Spot, Reserved, Dedicated Host.
+
+🧪 Hands-on 1: Khởi tạo EC2 kiểu On-Demand (UI)
+- Truy cập AWS Console → EC2 → Launch Instance
+- Chọn AMI: ví dụ Amazon Linux 2023
+- Chọn loại máy: t2.micro (Free Tier eligible)
+- Storage: giữ mặc định
+- Key pair: tạo hoặc chọn sẵn (để SSH vào)
+- Security Group: mở port 22 (SSH), 80 (web)
+- Chọn Launch Type mặc định là On-Demand
+- Nhấn Launch
+
+✅ Xong! Bạn vừa tạo xong một On-Demand EC2.
+
+🧪 Hands-on 2: Tạo Spot Instance
+- AWS Console → EC2 → Instances → Launch Instance
+- Trong bước chọn instance type, tick vào:
+
+✅ "Request Spot Instances"
+- Các bước còn lại giống như On-Demand:
+- Chọn AMI, loại máy, key pair, v.v.
+Bạn có thể cấu hình thêm:
+- Max price (giá cao nhất bạn chịu)
+- Duration (thời gian tối đa chạy)
+Nhấn Launch
+
+📌 Lưu ý:
+Nếu AWS không có tài nguyên rảnh hoặc có người trả giá cao hơn → request không được cấp
+Spot có thể bị thu hồi nếu không còn tài nguyên
+
+🧪 Hands-on 3: Reserved Instance (RI)
+⚠️ Bạn không tạo instance mới mà mua quyền sử dụng cố định như sau:
+
+Vào EC2 → Reserved Instances → Purchase Reserved Instance
+Chọn:
+- Instance Type (ví dụ: t3.medium)
+Region & AZ
+- Term: 1 năm hoặc 3 năm
+- Payment: No upfront, Partial, All upfront
+Xác nhận thanh toán
+
+➡️ Khi bạn chạy EC2 đúng cấu hình, sẽ được tính giá RI thay vì On-Demand.
+
+🧪 Hands-on 4: Dedicated Host
+- EC2 Console → Dedicated Hosts → Allocate Host
+Chọn:
+- Instance family (ví dụ c6i)
+- AZ (Availability Zone)
+Host Tenancy
+- Sau khi Allocate, quay lại Launch Instance
+- Trong Tenancy, chọn Dedicated host
+* EC2 sẽ được gán vào host riêng
+📌 Phù hợp cho những ai cần host riêng biệt, tuân thủ bảo mật, kiểm soát license (BYOL).
+
+Phần 6: EC2 - Solutions Architect Associate Level
+
+Bài 48: Private vs Public vs Elastic IP
+🔹 1. Private IP
+- Được gán tự động cho mỗi EC2 trong VPC
+- Dạng: 10.x.x.x, 172.x.x.x, 192.168.x.x (giống LAN)
+- Chỉ dùng để giao tiếp nội bộ trong cùng VPC (hoặc qua VPN/Peering)
+- Không thể truy cập từ Internet nếu chỉ có Private IP
+
+🔹 2. Public IP
+- IP công khai, ai trên Internet cũng có thể truy cập
+- Gán tự động nếu bạn chọn Auto-assign Public IP khi tạo EC2
+- Tuy nhiên, nếu bạn stop/start EC2, public IP có thể đổi
+- Không nên dùng public IP nếu bạn cần địa chỉ ổn định
+
+3. Elastic IP (EIP)
+- Là Public IP tĩnh (công khai) mà bạn tự quản lý
+- Gắn vào EC2 thủ công (hoặc qua script)
+- Không đổi IP kể cả khi EC2 stop/start
+- Bạn phải trả phí nếu EIP không gắn với instance nào
+
+Bài 49: Private vs Public vs Elastic IP Hands On
+- 🔧 BƯỚC 1: Tạo EC2 và kiểm tra Private IP
+- Vào EC2 Console → Launch Instance
+- AMI: Amazon Linux 2 hoặc Ubuntu
+- Instance Type: t2.micro (free tier)
+- Network settings:
+- VPC: chọn default
+- Subnet: chọn bất kỳ
+- Auto-assign public IP: disable (không bật)
+- Tạo hoặc chọn key pair để SSH
+- Launch instance
+
+✅ Sau khi tạo xong:
+
+- Chọn instance → tab Networking
+- Xem IP:
+- Private IPv4: Ví dụ 10.0.1.5
+- Public IP: ❌ Không có
+
+✅ Đây là instance chỉ có IP nội bộ, không SSH được từ Internet.
+
+🔧 BƯỚC 2: Tạo EC2 có Public IP
+- Lặp lại bước tạo EC2 như trên
+- Ở bước "Network settings":
+- Auto-assign Public IP: Enable
+
+✅ Sau khi launch:
+
+- Instance có Private IP: 10.x.x.x
+- Có thêm Public IPv4: ví dụ 18.208.123.15
+
+📌 Truy cập SSH:
+- ssh -i my-key.pem ec2-user@18.208.123.15
+💡 Lưu ý: Nếu stop/start lại instance này, Public IP sẽ thay đổi!
+
+📌 BƯỚC 3: Gán Elastic IP vào EC2
+🧱 Bước A: Allocate Elastic IP
+- Vào EC2 → Network & Security → Elastic IPs
+- Click Allocate Elastic IP
+- Chọn Amazon pool → Allocate
+- Bạn sẽ thấy 1 Elastic IP ví dụ: 3.91.112.66
+
+🔗 Bước B: Associate Elastic IP với EC2
+- Chọn Elastic IP → Actions → Associate Elastic IP
+- Resource Type: Instance
+- Chọn EC2 cần gán
+- Private IP: chọn private IP của EC2 đó
+Xác nhận
+
+Bài 50: EC2 Placement Groups
+* EC2 Placement Groups là gì?
+- Placement Group cho phép bạn quy định cách các EC2 instance được đặt vật lý trong cùng vùng (Availability Zone) để đạt được các mục tiêu hiệu năng hoặc khả năng chịu lỗi.
+
+📦 Có 3 loại Placement Group chính:
+Loại	        Mục đích	                                 Đặc điểm
+Cluster	      Tối đa hiệu năng mạng	                     Các instance đặt rất gần nhau, thường cùng rack. Thích hợp cho workload cần băng thông cao và độ trễ thấp như Big Data, HPC, ML
+Spread	      Tăng độ sẵn sàng	                         Các instance được đặt trên phần cứng tách biệt → nếu 1 máy vật lý lỗi, các instance khác không bị ảnh hưởng
+Partition	    Cân bằng giữa hiệu năng và độ sẵn sàng	   Các instance được đặt vào các partition khác nhau, mỗi partition nằm trên phần cứng riêng biệt. Dùng cho hệ thống phân tán như HDFS, Kafka,...
+
+Bài 51: EC2 Placement Groups Hands On
+🛠️ EC2 Placement Groups – Thực hành
+✅ Bước 1: Tạo Placement Group
+- Vào AWS Console → EC2 → Placement Groups
+- Nhấn Create placement group
+* Nhập:
+- Name: ví dụ pg-cluster-demo
+- Strategy: cluster, spread, hoặc partition
+- Number of partitions (nếu chọn partition)
+- Nhấn Create
+
+✅ Bước 2: Tạo EC2 Instance và gán Placement Group
+- Khi tạo EC2 mới:
+- Vào EC2 → Launch Instance
+- Chọn AMI và loại instance (tốt nhất chọn loại hỗ trợ ENA như t3, c5, m5)
+- Configure Instance Details:
+- Ở phần Placement Group, chọn:
+- "Add instance to placement group" → Chọn placement group vừa tạo
+
+🧠 Chú ý:
+* Với cluster, các instance phải cùng type và cùng AZ
+* Với spread, chỉ tối đa 7 instance / AZ
+* Với partition, cần chọn số lượng partition khi tạo group
+
+✅ Bước 3: Kiểm tra hiệu quả (với Cluster)
+- Nếu bạn chọn loại cluster, bạn có thể kiểm tra hiệu năng truyền dữ liệu mạng giữa các instance:
+
+Bài 52 Elastic Network Interfaces(ENI) - Overview
+Dĩ nhiên! Dưới đây là phần giải thích Elastic Network Interface (ENI) bằng tiếng Việt, dễ hiểu và đầy đủ:
+
+🧠 Elastic Network Interface (ENI) là gì?
+ENI là một card mạng ảo trong AWS, giống như card mạng vật lý trên máy chủ thật. ENI có thể gắn vào các EC2 instance để giúp chúng giao tiếp trong mạng VPC.
+
+🧩 ENI bao gồm những gì?
+Thành phần	                         Chức năng
+Private IP chính	                   IP nội bộ mặc định
+Private IP phụ (tùy chọn)	           Dùng khi cần nhiều IP
+Elastic IP (tùy chọn)	               IP công cộng cố định
+Security Group riêng	               Gán firewall riêng cho ENI
+Subnet	                             ENI luôn thuộc về 1 subnet
+MAC Address	                         Như card mạng thật
+
+Bài 53: Elastic Network Interfaces(ENI) - Hands On
+
+🧰 Điều kiện chuẩn bị
+- Yêu cầu	Mô tả
+- Tài khoản AWS	Đã kích hoạt VPC, EC2
+- Có 2 EC2 instance	Cùng subnet hoặc cùng VPC
+- Subnet và Security Group	Có sẵn hoặc tự tạo
+
+🛠️ Bước 1: Tạo ENI
+- Truy cập EC2 Console → bên trái chọn Network Interfaces
+- Nhấn Create Network Interface
+
+Nhập:
+- Description: eni-lab-demo
+   * Subnet: chọn subnet của EC2 bạn đang dùng
+   * Private IP: để mặc định hoặc chọn IP trong subnet
+   * Security Group: nên chọn security group có mở cổng SSH (22) để dễ test
+   * Nhấn Create network interface
+
+🧷 Bước 2: Gắn ENI vào EC2 instance
+- Trong danh sách Network Interface → chọn ENI vừa tạo
+- Nhấn Actions → Attach
+- Chọn 1 EC2 instance (ví dụ: EC2-A)
+- Nhấn Attach
+
+🖥️ Bước 3: SSH vào EC2 và kiểm tra ENI
+- ip addr show Hoặc: ifconfig
+* Bạn sẽ thấy 2 interface:
+* eth0 là ENI mặc định
+* eth1 là ENI mới vừa gắn
+
+🔁 Bước 4: Tháo ENI và gắn vào EC2 khác (failover demo)
+- Tháo:
+- Quay lại AWS Console → ENI → Actions → Detach
+- Đợi vài giây cho ENI tách ra khỏi EC2-A
+
+- Gắn vào EC2 khác:
+- Attach ENI vào EC2-B
+- SSH vào EC2-B và kiểm tra:
+- ip addr show Bạn sẽ thấy ENI mới đã được gắn vào EC2-B. IP không thay đổi.
+
+🔍 Kiểm tra kết nối
+- Từ máy khác (hoặc máy local), thử ping hoặc SSH tới IP của ENI:
+- ssh ec2-user@<eni-private-ip>
+- Miễn là security group cho phép cổng 22, bạn sẽ truy cập được.
+
+Bài 55: EC2 Hibernate
+- EC2 Hibernate là một tính năng cho phép bạn tạm dừng (pause) EC2 instance và lưu trạng thái bộ nhớ RAM của nó ra ổ đĩa (EBS).
+Khi khởi động lại, instance sẽ khôi phục lại toàn bộ phiên làm việc y như trước (bao gồm RAM, tiến trình, bộ nhớ cache...).
+
+Bài 56: EC2 Hibernate - Hands On
+🛠️ BƯỚC 1: Tạo EC2 Instance có bật Hibernate
+- Vào AWS Console → EC2 → Launch Instance
+- Đặt tên ví dụ: ec2-hibernate-demo
+- Chọn AMI: Amazon Linux 2 hoặc Ubuntu
+- Chọn Instance Type: t3.medium hoặc m5.large
+- Key Pair: Chọn key pair bạn có
+- Network settings: Dùng default VPC/Subnet (hoặc subnet bạn tạo)
+- Configure storage:
+- Đảm bảo ổ EBS được Enable encryption (aws/ebs key hoặc custom key)
+Advanced details:
+Tick vào: ✅ Enable hibernation as an additional stop behavior
+📌 Lưu ý: Nếu checkbox không xuất hiện → có thể instance type hoặc EBS chưa mã hóa!
+Nhấn Launch Instance
+
+🖥️ BƯỚC 2: SSH vào Instance và tạo trạng thái
+- ssh -i your-key.pem ec2-user@<your-ec2-ip>
+
+# Simulate running workload
+echo "Hello from RAM" > /dev/shm/ramfile
+cat /dev/shm/ramfile
+📌 /dev/shm là thư mục RAM (tmpfs), sẽ mất nếu stop thường nhưng giữ lại nếu dùng hibernate.
+
+🔁 BƯỚC 3: Hibernate EC2
+Vào AWS Console → EC2 → Instances
+- Chọn instance vừa tạo
+- Nhấn Instance state → Stop instance
+Trong hộp thoại sẽ thấy:
+
+✅ Tùy chọn "Stop with Hibernate" → nhấn Confirm
+(hoặc dùng CLI)
+- aws ec2 stop-instances --instance-ids i-xxxxxxxxxxxxxxxxx --hibernate
+✅ BƯỚC 4: Start lại và xác minh
+Sau vài phút → EC2 chuyển về trạng thái stopped (hibernated)
+Nhấn Start instance
+- SSH lại vào instance
+- cat /dev/shm/ramfile
+👉 Nếu thấy "Hello from RAM" → Hibernate đã thành công!
+
+Phần 7: EC2 instance Storage
+
+Bài 57: EBS Overview
+- Amazon EBS (Elastic Block Store) là dịch vụ lưu trữ dạng ổ đĩa block (giống như ổ cứng) được dùng để gắn vào EC2 instance trong AWS.
+📌 Nó hoạt động tương tự như ổ SSD/HDD trên máy tính, nhưng được quản lý hoàn toàn bởi AWS, có thể mở rộng, mã hóa và backup dễ dàng.
+
+Bài 58: EBS Hands On
+🛠️ BƯỚC 1: Chuẩn bị EC2 instance
+- Vào EC2 → Instances → Launch instance
+- AMI: Amazon Linux 2 hoặc Ubuntu
+- Instance type: t2.micro (cho free-tier)
+- Key pair: chọn hoặc tạo mới
+- Network & Security Group: mở cổng SSH (22)
+- Launch EC2
+
+💾 BƯỚC 2: Tạo EBS Volume
+- Vào EC2 → Volumes (trong mục "Elastic Block Store")
+- Nhấn Create Volume
+
+- Size: ví dụ 1 GiB
+- Volume type: gp3
+- Availability Zone: phải trùng với AZ của EC2 (ví dụ: us-east-1a)
+- Nhấn Create Volume
+
+🔗 BƯỚC 3: Gắn EBS vào EC2
+- Chọn volume mới tạo → Actions → Attach Volume
+- Chọn EC2 instance vừa tạo
+- Device name: /dev/xvdf (hoặc để mặc định)
+- Nhấn Attach
+
+🖥️ BƯỚC 4: SSH vào EC2 và format EBS
+# Kết nối SSH
+- ssh -i my-key.pem ec2-user@<Public-IP>
+- lsblk
+- sudo mkfs -t ext4 /dev/xvdf
+- sudo mkdir /data-ebs
+- sudo mount /dev/xvdf /data-ebs
+- echo "Hello from EBS" | sudo tee /data-ebs/test.txt
+- cat /data-ebs/test.txt
+
+🔌 BƯỚC 5: Unmount và Tháo Volume
+# Unmount ổ đĩa
+- sudo umount /data-ebs
+
+Bài 59: EBS Snapshots 
+✅ 1. EBS Snapshot là gì?
+EBS Snapshot là bản sao lưu (backup) toàn bộ dữ liệu của một EBS volume tại thời điểm cụ thể. Nó được lưu trong Amazon S3 (ẩn bên dưới), giúp bạn có thể:
+🔄 Khôi phục lại volume khi bị mất dữ liệu
+🚀 Tạo nhanh volume mới từ bản snapshot
+🌍 Sao chép snapshot sang Region khác
+🧪 Tự động hóa backup hàng ngày
+
+🧠 2. Tính năng chính của Snapshot
+Tính năng                 	          Mô tả
+🔁 Incremental backup               	Snapshot đầu tiên lưu toàn bộ dữ liệu, các snapshot sau chỉ lưu phần thay đổi
+🧠 Không cần tắt EC2	                Có thể tạo snapshot trực tiếp khi EC2 đang chạy
+🧹 Xóa snapshot cũ an toàn	          Xóa snapshot không làm mất dữ liệu nếu còn snapshot sau
+🗂️ Snapshot quản lý riêng biệt	      Không phụ thuộc EC2 hay volume ban đầu
+
+Bài 60: EBS Snapshots - Hands On
+🛠️ BƯỚC 1: Tạo EC2 instance
+- Vào AWS Console → EC2 > Launch Instance
+- AMI: chọn Amazon Linux 2
+- Instance type: t2.micro (Free-tier)
+- Cấu hình mạng và SSH key
+- Launch instance
+
+💾 BƯỚC 2: Tạo và gắn Volume
+- Vào EC2 > Volumes > Create Volume
+- Size: 1 GiB
+- Volume type: gp3
+- AZ: trùng với EC2 (ví dụ us-east-1a)
+- Sau khi tạo xong → chọn volume → Actions > Attach volume
+- Chọn instance vừa tạo
+- Device name: /dev/xvdf
+
+🖥️ BƯỚC 3: SSH và ghi dữ liệu
+- ssh -i my-key.pem ec2-user@<EC2-IP>
+- sudo mkfs -t ext4 /dev/xvdf
+- sudo mkdir /data
+- sudo mount /dev/xvdf /data
+- echo "Backup from EBS snapshot" | sudo tee /data/test.txt
+- cat /data/test.txt
+
+📸 BƯỚC 4: Tạo Snapshot từ volume
+- Vào AWS Console → EC2 > Volumes
+- Chọn volume /dev/xvdf vừa gắn
+- Actions → Create Snapshot
+- Đặt tên: snapshot-demo
+- Mô tả: Backup trước khi xóa
+- Nhấn Create Snapshot
+- Vào tab Snapshots để xem tiến trình (status → completed)
+
+🧹 BƯỚC 5: Unmount và Xóa volume
+# Unmount
+- sudo umount /data
+- Vào Console → Detach volume khỏi EC2
+- Sau khi detach → chọn volume → Delete
+
+♻️ BƯỚC 6: Tạo lại Volume từ Snapshot
+- Vào Snapshots
+- Chọn snapshot snapshot-demo
+- Actions → Create Volume
+- Chọn AZ: phải trùng EC2
+- Dung lượng: giữ nguyên hoặc tăng
+- Nhấn Create Volume
+
+🔗 BƯỚC 7: Gắn lại Volume và kiểm tra
+- Vào Volumes → Attach Volume
+- Gắn vào EC2 như cũ, device: /dev/xvdf
+
+# SSH lại vào EC2
+- ssh -i my-key.pem ec2-user@<EC2-IP>
+
+# Mount lại
+sudo mkdir /data
+sudo mount /dev/xvdf /data
+
+# Kiểm tra dữ liệu
+cat /data/test.txt
+👉 Kết quả: bạn thấy dòng "Backup from EBS snapshot" → Restore thành công!
+
+Bài 61: AMI Overview
+📦 AMI Overview – Amazon Machine Image là gì?
+✅ 1. AMI là gì?
+* AMI (Amazon Machine Image) là một bản sao lưu đầy đủ của EC2 instance, bao gồm:
+- Hệ điều hành (Linux, Windows…)
+- Ổ đĩa EBS (với phần mềm đã cài sẵn, cấu hình hệ thống…)
+- Thông tin khởi động (boot, phân vùng…)
+- Tùy chọn launch permissions (ai có thể dùng AMI)
+
+🧠 AMI giúp bạn tạo ra nhiều EC2 giống hệt nhau chỉ trong vài giây — rất phù hợp để:
+- Tạo template cho server
+- Backup toàn bộ EC2
+- Tự động hóa triển khai môi trường
+
+Bài 62: AMI Hands On
+🛠️ BƯỚC 1: Tạo EC2 và ghi dữ liệu
+- Vào EC2 > Instances > Launch Instance
+- AMI: Amazon Linux 2
+- Instance type: t2.micro
+- Key pair: Chọn/ tạo mới
+- Mở port 22 (SSH)
+- Launch instance
+
+📸 BƯỚC 2: Tạo AMI từ EC2 hiện tại
+- Vào EC2 > Instances
+- Chọn instance → Actions → Image and templates → Create image
+- Đặt tên: my-custom-ami
+- Tick: Include volumes (mặc định)
+- Nhấn Create image
+
+📌 Xem trạng thái tại EC2 > AMIs → đợi status: available
+
+🚀 BƯỚC 3: Tạo EC2 mới từ AMI
+- Vào EC2 > AMIs
+- Chọn AMI my-custom-ami vừa tạo
+- Nhấn Launch instance from image
+- Cấu hình như instance ban đầu
+- Launch instance
+
+✅ BƯỚC 4: SSH và kiểm tra EC2 mới
+- Sau khi tạo xong Ami 
+- vào lại EC2 > instances 
+- laucnh instances 
+- điền như bước 1 nhưng ở phần Applcation and OS images 
+- chọn My AMIs > chọn AMIs vừa tạo lúc ở Amazon Machine image  
+
+Bài 63: EC2 Instance Store
+EC2 Instance Store (còn gọi là Ephemeral Storage) là một loại lưu trữ tạm thời gắn liền với máy ảo EC2 instance trên AWS. Dưới đây là định nghĩa và các đặc điểm chính:
+
+✅ Định nghĩa:
+- EC2 Instance Store là một loại bộ nhớ vật lý nằm trực tiếp trên máy chủ vật lý (host machine) mà EC2 instance đang chạy.
+Khi bạn tạo một instance, nếu loại instance đó hỗ trợ instance store thì bạn có thể gắn các ổ đĩa này để sử dụng như ổ đĩa cứng tạm thời.
+
+Bài 64: EBS Volume Types
+Amazon EBS (Elastic Block Store) cung cấp nhiều loại Volume (ổ đĩa) để phục vụ các mục đích khác nhau về hiệu suất, chi phí và khối lượng công việc. Dưới đây là bảng tóm tắt các loại EBS Volume phổ biến nhất:
+
+🧱 1. SSD-Based Volumes (Dành cho tác vụ IOPS cao)
+Loại Volume	                  Tên đầy đủ	                            Dùng cho	                        Đặc điểm nổi bật
+gp3	                          General Purpose SSD (phiên bản mới)	    Hầu hết các workload	            ✅ Hiệu năng cao, chi phí thấp hơn gp2
+                                                                                                        ✅ Tùy chỉnh IOPS và throughput
+
+gp2	                          General Purpose SSD (cũ hơn)	          Workload thông thường            	✅ IOPS theo dung lượng (3 IOPS/GB)
+                                                                                                        ⛔ Không tùy chỉnh IOPS
+
+io2	                          Provisioned IOPS SSD (phiên bản mới)	  Database, app latency thấp	      ✅ Độ bền cao (99.999%)
+                                                                                                        ✅ Tối đa 500 IOPS/GB
+
+io1	                          Provisioned IOPS SSD (cũ hơn)          	Database yêu cầu cao	            ✅ Giống io2 nhưng độ bền thấp hơn
+⛔ Chi phí cao hơn
+
+💽 2. HDD-Based Volumes (Dành cho lưu trữ khối lượng lớn, giá rẻ)
+Loại Volume	                 Tên đầy đủ	                              Dùng cho	                        Đặc điểm nổi bật
+st1	                         Throughput Optimized HDD	                Big data, log processing	        ✅ Dung lượng lớn
+                                                                                                        ✅ Tốc độ truyền dữ liệu cao
+                                                                                                        ⛔ Không dùng cho IOPS cao
+
+sc1	                         Cold HDD	                                Lưu trữ ít truy cập	              ✅ Rẻ nhất
+                                                                                                        ⛔ Hiệu năng thấp, chỉ dùng cho dữ liệu “cold”
+
+📊 So sánh nhanh (bảng tóm tắt)
+Volume	                  Kiểu	                IOPS tối đa                  	Throughput tối đa	                  Dùng cho
+gp3	                      SSD	                  16,000                      	1,000 MB/s                        	Web, app, general workload
+gp2                      	SSD	                  16,000                      	250 MB/s (tùy thuộc dung lượng)    	General purpose
+io1                      	SSD	                  64,000                      	1,000 MB/s	                        OLTP, NoSQL, latency-sensitive apps
+io2                      	SSD	                  64,000+                      	1,000 MB/s	                        DB, mission-critical workloads
+st1                      	HDD	                  ~500                        	500 MB/s	                          Big data, streaming
+sc1                      	HDD                  	~250                        	250 MB/s	                          Archival, infrequent access
+
+📌 Gợi ý chọn Volume:
+✅ gp3 – Khuyến nghị dùng cho hầu hết các ứng dụng (cân bằng hiệu suất và chi phí).
+
+✅ io2 – Dùng cho hệ thống cần IOPS cực cao và độ tin cậy tối đa (ví dụ database Oracle, SAP).
+
+✅ st1 – Dùng cho big data cần throughput cao, nhưng không yêu cầu IOPS cao.
+
+✅ sc1 – Dữ liệu lưu trữ lâu dài, ít truy cập (backup, archive).
+
+Bài 65: EBS Multi-Attach
+🔗 Amazon EBS Multi-Attach – Là gì?
+- EBS Multi-Attach là tính năng cho phép nhiều EC2 instances trong cùng một Availability Zone
+(AZ)có thể gắn (attach) đồng thời cùng một EBS volume ở chế độ read-write.
+
+Bài 66: EBS Encryption
+🔐 EBS Encryption – Mã hóa ổ đĩa EBS
+- EBS Encryption là tính năng của AWS cho phép mã hóa dữ liệu trong các ổ đĩa EBS (Elastic Block Store),
+giúp tăng cường bảo mật dữ liệu khi lưu trữ và truyền tải.
+
+Baì 67: Amazon EFS
+✅ Amazon EFS (Elastic File System) là gì?
+- Amazon EFS là một dịch vụ lưu trữ file hệ thống dùng chung, linh hoạt và tự mở rộng được cung 
+cấp bởi AWS, cho phép nhiều EC2 instance truy cập đồng thời cùng một hệ thống file như một ổ đĩa mạng.
+
+Bài 68: Amazon EFS - Hands On
+🛠️ BƯỚC 1: Tạo VPC và Security Group
+Bạn có thể dùng default VPC, hoặc tạo VPC riêng nếu cần cấu hình nâng cao.
+
+✅ Tạo Security Group EFS:
+- Vào EC2 > Security Groups > Create security group
+- Đặt tên: efs-sg
+- Thêm rule:
+     * Type: NFS
+     * Port: 2049
+     * Source: Security group của EC2 hoặc 0.0.0.0/0 (test)
+- Nhấn Create
+
+🧾 BƯỚC 2: Tạo Amazon EFS
+- Vào EFS > Create file system
+- Đặt tên: my-efs
+- Chọn VPC: nên chọn default VPC nếu chưa tạo riêng
+- Add mount targets cho mỗi AZ (mặc định AWS tạo sẵn)
+- Chọn đúng security group efs-sg
+- Nhấn Create
+
+👉 Chờ vài phút để EFS được khởi tạo
+
+💻 BƯỚC 3: Tạo EC2 instances
+- Tạo 2 EC2 instance:
+- AMI: Amazon Linux 2
+- Type: t2.micro
+- Security group: mở port SSH (22) và thêm efs-sg (hoặc cho phép NFS từ EFS)
+- Launch cả 2 instance
+
+🔗 BƯỚC 4: Cài đặt EFS utils và mount
+Trên cả 2 EC2 instance, thực hiện:
+
+# Cập nhật & cài EFS utilities
+- sudo yum update -y
+- sudo yum install -y amazon-efs-utils
+
+# Tạo thư mục mount
+- sudo mkdir /mnt/efs
+
+# Mount EFS (thay ID bằng ID thực tế của bạn)
+- sudo mount -t efs <EFS-ID>:/ /mnt/efs
+
+# Kiểm tra mount thành công
+- df -hT | grep efs
+📌 Ví dụ: nếu EFS-ID là fs-12345678 → bạn mount như:
+- sudo mount -t efs fs-12345678:/ /mnt/efs
+
+🧪 BƯỚC 5: Ghi & chia sẻ dữ liệu
+# Trên EC2 số 1:
+- echo "Hello from EC2-1" | sudo tee /mnt/efs/test.txt
+
+# Trên EC2 số 2:
+- cat /mnt/efs/test.txt
+👉 Nếu đọc được "Hello from EC2-1" → Thành công!
+
+🧼 BƯỚC 6 (tùy chọn): Tự động mount khi reboot
+# Thêm dòng sau vào /etc/fstab để mount EFS khi EC2 khởi động lại:
+- echo "fs-12345678:/ /mnt/efs efs defaults,_netdev 0 0" | sudo tee -a /etc/fstab
+
+🧹 BƯỚC 7: Cleanup
+- EC2: Stop hoặc terminate
+- EFS: Delete trong EFS Console
+- Security Group: xóa nếu không cần
+
+Bài 69: EFS và EBS
+Dưới đây là bảng so sánh chi tiết và dễ hiểu giữa Amazon EFS và Amazon EBS – hai dịch vụ lưu trữ chính của AWS dành cho EC2:
+
+✅ So sánh Amazon EFS vs Amazon EBS
+Tiêu chí	                                  Amazon EBS (Elastic Block Store)	                                        Amazon EFS (Elastic File System)
+📦 Loại lưu trữ	                            Block Storage (ổ cứng ảo cho từng EC2)	                                  File Storage (chia sẻ thư mục kiểu NFS)
+🖥️ Gắn với EC2	                            Chỉ gắn được 1 EC2 tại 1 thời điểm	                                      Gắn được cho nhiều EC2 cùng lúc (multi-AZ)
+🌐 Chia sẻ dữ liệu	                        ❌ Không chia sẻ được	                                                  ✅ Chia sẻ dễ dàng giữa nhiều máy chủ
+📈 Tự động mở rộng	                        ❌ Không – cần tăng size thủ công	                                      ✅ Có – tự scale dung lượng lên tới petabyte
+⚙️ Hiệu suất & độ trễ	                      Nhanh, độ trễ thấp (thích hợp cho DB)	                                    Chậm hơn chút, phù hợp cho truy cập đồng thời
+🔄 Tính sẵn sàng	                          Trong 1 AZ duy nhất (phụ thuộc vào EC2 AZ)	                              Multi-AZ (đảm bảo cao)
+💵 Chi phí	                                Rẻ hơn – tính theo dung lượng provisioned	                                Đắt hơn – tính theo dung lượng sử dụng thật
+💾 Trường hợp sử dụng	                      Database, hệ điều hành, ứng dụng cần IOPS cao	                            Web server, log, ứng dụng container, dữ liệu chia sẻ
+🧠 Giao thức truy cập	                      Block level (ext4, xfs trên EC2)	                                        NFS v4 (mount như thư mục mạng)
+
+📌 Khi nào nên dùng cái nào?
+Nhu cầu	                                                          Nên dùng
+Chạy database (MySQL, PostgreSQL, MongoDB...) cần tốc độ cao	    ✅ EBS
+Dùng làm ổ đĩa hệ điều hành EC2	                                  ✅ EBS
+Chia sẻ nội dung website, thư mục upload, log file              	✅ EFS
+Chạy ứng dụng container trên ECS/EKS cần mount thư mục          	✅ EFS
