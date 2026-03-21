@@ -639,3 +639,101 @@ docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/my-service:latest
 * Nhấn Create service → ECS sẽ tự pull image từ ECR và chạy container.
 
 * Bạn có thể kiểm tra trong ECS → Cluster → Tasks.
+
+
+# Deploy FE best practive
+1. Build project Vue
+   
+2. Tạo s3 Bucket
+- Create bucket
+- Đặt tên (ví dụ: frontend-vue-app-duc)
+- Bỏ tick "Block all public access"
+- Create bucket
+
+3. Enable Static Website Hosting
+* Trong bucket
+- Vào tab Properties
+- Tìm Static website hosting
+- Enable và cấu hình:
+
+``` bash
+Index document: index.html
+Error document: index.html
+```
+4. Upload file build
+* Vào tab Objects → Upload
+- Upload toàn bộ file trong dist/ (kéo thả tất cả các file folder vào)
+- Nhớ upload file bên trong, không upload cả folder dist
+
+5. Set quyền public
+- Vào tab Permissions → Bucket policy:
+
+``` bash
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicRead",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": ["s3:GetObject"],
+      "Resource": ["arn:aws:s3:::frontend-vue-app-duc/*"]
+    }
+  ]
+}
+```
+
+6. Lấy URL truy cập:
+- lấy domain ở Bucket website endpoint bên trong tab Properties
+
+7. Tạo CloudFront Distribution
+- Vào CloudFront → Create distribution
+- Origin domain (dán domain đã lấy ở bước 6 paste vào s3 origin)
+
+8. Trỏ domain router53 vào cloudFront nếu muốn
+- ở step 1 của bước Create distribution có bước add router 53 có thể add ở đây
+- hoặc có thể vào router53
+- AWS Console → Route53
+- Chọn: Registered domains
+- Bấm: Register domain
+- Nhập tên domain
+- Thanh toán
+- Xác nhận email
+
+9. Tạo SSL Certificate (sau khi tạo domain ở router53)
+- Tạo certificate
+- Chọn:
+
+``` bash
+Request certificate → Public certificate
+```
+
+- Nhập domain:
+
+``` bash
+yourdomain.com (domain vừa tạo ở Router53)
+```
+10. Gắn domain vào CloudFront
+- Vào CloudFront → Distribution → Edi
+* Thêm Alternate domain name (CNAME)
+``` bash
+app.yourdomain.com (domain của router53)
+```
+
+11. Trỏ domain bằng Route53
+- Hosted Zones → chọn domain của bạn
+- Tạo record
+- Record type:
+``` bash
+A – IPv4 address
+```
+- Bật:
+``` bash
+Alias: ON
+```
+
+- Alias target:
+* Chọn:
+``` bash
+CloudFront distribution
+```
