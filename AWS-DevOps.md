@@ -737,3 +737,52 @@ Alias: ON
 ``` bash
 CloudFront distribution
 ```
+
+# Deploy be service với aws lambda (express)
+1. Create Function
+
+2. Function name (đặt tên cho function)
+- Runtime (chọn môi trường chạy ví dụ nodejs24.x)
+- Create function
+  
+3. ở tab Code
+- Chọn Upload from
+- upload source đã nén thành file zip lên
+
+4. nhấn Test() hoặc Deploy()
+
+5. Trỏ API Gateway
+
+5.1 Create API
+
+5.2 Choose an API type
+- Chọn HTTP API (nhấn Build)
+- Điền  API Name
+- ở Integrations nhấn Add integration
+- Chọn lamba
+- ở Lambda function chọn lambda vừa deploy (nhấn Next)
+
+5.3 Configure routes
+- Nhấn Add route : Chọn Method (ví dụ: Get)
+- Resource path : gõ path của API đó (ví dụ /users)
+- Intergration target: chọn thư mục deploy lambda (ví dụ: test)
+- Next
+
+5.4 Define stages 
+- Để mặc định auto deploy
+- Next
+
+5.5 Review and create
+- Create
+
+6. ở tab develop ở thanh sidebar
+
+6.1 Configure
+
+``` bash
+Access-Control-Allow-Origin: * (hoặc có thể thay thế bằng domain fe)
+Access-Control-Allow-Headers: Content-Type,X-Amz-Date,Authorization,X-Api-Key
+Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
+```
+- nhớ nhấn nút add ở mỗi row
+- Sau đó Save
