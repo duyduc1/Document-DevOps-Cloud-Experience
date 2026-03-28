@@ -583,7 +583,8 @@ output format: json
 ```
 
 ### Đăng nhập từ ECR từ Docker
-- aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+- aws ecr get-login-password --region us-east-1 \
+| docker login --username AWS --password-stdin 919446726176.dkr.ecr.us-east-1.amazonaws.com
 
 ### build 1 docker images
 
