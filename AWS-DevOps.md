@@ -1076,7 +1076,7 @@ Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
 
 ## Application (ALB)
 
-### Tạo Domain cho Application
+### Tạo Domain cho Application (Ở service EC2)
 
 1. Tạo target group
 
@@ -1144,3 +1144,62 @@ Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
 
 - Add rule
 
+4. Security Group
+
+- Ở tab Security
+
+- kick chọn Security Group (ví dụ: sg-0224501b84cc86f20)
+
+- Chọn (Edit inbound rules)
+
+- Add rule
+
+- Type (HTTP)
+
+- tích chọn 0.0.0.0/0
+
+- Save changes
+
+## ECR , ECS, EC2
+
+### Triển khai dự án với EC2
+
+### EC2
+
+- Vào service EC2
+
+- instances (Launch instances)
+
+- Name (có thể đặt hoặc không ví dụ: Deployment-App)
+
+- Quick Start (chọn Ubuntu hoặc tuỳ distro)
+
+- Instance type (chọn type máy phù hợp ví dụ (c71-flex.large))
+
+- Key pair name - required (chọn key đã tạo trước đó hoặc Create new key pair)
+
+- Network settings (chọn Edit)
+
+- VPC: (chọn : VPC-Lab)
+
+- Subnet (chọn Subnet sẽ triển khai (App-subnet-1 hoặc App-subnet-2 miễn 1 trong 2 Subnet này có Endpoint đã tạo trong VPC))
+
+- Auto-assign public IP (disable IP) chặn IP public
+
+- Add security group rule
+
+- Type: Custom TCP
+
+- Port range: 3000 (Port Application)
+
+- Source: (sg-0224501b84cc86f20) chỉ cho phép Security group của ALB được phép truy cập port 3000 này
+
+- Launch Instances
+
+- Vào instance vừa tạo (Deployment-App)
+
+- chọn Connect
+
+- Connection type (chọn : Connect using a Private IP)
+
+- Connect 
