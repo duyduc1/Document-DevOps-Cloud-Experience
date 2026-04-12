@@ -790,7 +790,9 @@ Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
 
 # Deploy BE Best practive với VPC
 
-## Layer Public Subnet
+## Setup VPC
+
+### Layer Public Subnet
 
 1. Triển khai VPC:
 
@@ -886,7 +888,7 @@ Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
 
 - ở tab (Resource map) khi xem Subnet của 2 Nat sẽ thấy thông tới IGW (chứng tỏ Nat đã có internet)
 
-## Layer Private Subnet (Application - Database)
+### Layer Private Subnet (Application - Database)
 
 1.8 Tạo 2 Subnet cho App:
 
@@ -894,22 +896,126 @@ Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
 
 - chọn VPC (VPC-Lab)
 
-- Điền (Subnet name): Nat-Subnet-1
+- Điền (Subnet name): App-Subnet-1
 
 - chọn (Availability Zone) : us-east-1a (tuỳ theo vùng và propocal triển khai)
 
-- Điền (IPv4 subnet CIDR block) : 10.0.0.0/24
+- Điền (IPv4 subnet CIDR block) : 10.0.10.0/22
 
 - Create subnet
 
-1.8.2 Tạo Subnet cho Nat-2 (Create subnet)
+1.8.2 Tạo Subnet cho App-Subnet-2 (Create subnet)
 
 - chọn VPC (VPC-Lab)
 
-- Điền (Subnet name): Nat-Subnet-2
+- Điền (Subnet name): App-Subnet-2
 
 - chọn (Availability Zone) : us-east-1b (tuỳ theo vùng và propocal triển khai)
 
-- Điền (IPv4 subnet CIDR block) : 10.0.1.0/24
+- Điền (IPv4 subnet CIDR block) : 10.0.14.0/22
 
 - Create subnet
+
+1.8.3 Tạo Route Table cho App-Subnet-1 (Create route table) và Attach App-Subnet-1 vào Route table
+
+- Đặt (Name - optional) : App-1-Route-Table
+
+- chọn (VPC) : VPC-Lab
+
+- Create route table
+
+- Chọn (Edit routes)
+
+- Chọn (Add route) : ở Destination chọn (0.0.0.0/0) ở Target chọn (Nat Gateway và ở dưới chọn (Nat-1) đã tạo ở bước trên)
+
+- Save changes
+
+- ở tab (Subnet associations)
+
+- Edit subnet associations
+
+- ở (Available subnets) chọn App-Subnet-1
+
+- Save associations
+
+1.8.4 Tạo Route Table cho App-Subnet-2 (Create route table) và Attach App-Subnet-2 vào Route table
+
+- Đặt (Name - optional) : App-2-Route-Table
+
+- chọn (VPC) : VPC-Lab
+
+- Create route table
+
+- Chọn (Edit routes)
+
+- Chọn (Add route) : ở Destination chọn (0.0.0.0/0) ở Target chọn (Nat Gateway và ở dưới chọn (Nat-2) đã tạo ở bước trên)
+
+- Save changes
+
+- ở tab (Subnet associations)
+
+- Edit subnet associations
+
+- ở (Available subnets) chọn App-Subnet-2
+
+- Save associations
+
+1.9 Tạo 2 subnet cho DB ở 2 vùng:
+
+1.9.1 Tạo Subnet cho DB-Subnets-1 (Create subnet)
+
+- chọn VPC (VPC-Lab)
+
+- Điền (Subnet name): DB-Subnet-1
+
+- chọn (Availability Zone) : us-east-1a (tuỳ theo vùng và propocal triển khai)
+
+- Điền (IPv4 subnet CIDR block) : 10.0.2.0/24
+
+- Create subnet
+
+1.9.2 Tạo Subnet cho DB-Subnet-2 (Create subnet)
+
+- chọn VPC (VPC-Lab)
+
+- Điền (Subnet name): DB-Subnet-2
+
+- chọn (Availability Zone) : us-east-1b (tuỳ theo vùng và propocal triển khai)
+
+- Điền (IPv4 subnet CIDR block) : 10.0.3.0/24
+
+- Create subnet
+
+1.9.3 Tạo Route Table 2 Subnet của DB và Attach cả 2 subnet vào Route table (DB-Subnet-1, DB-Subnet-2)
+
+- Create route table
+
+- Đặt (Name - optional) : DB-Route-Table
+
+- chọn (VPC) : VPC-Lab
+
+- Create route table
+
+- ở tab (Subnet associations)
+
+- Edit subnet associations
+
+- ở (Available subnets) chọn (DB-Subnet-1 và DB-Subnet-2)
+
+- Save associations
+
+* Chú thích Database không cần phải có Internet 
+
+1.10 Tạo Endpoints (Dành cho các máy EC2 không có public IP)
+
+- Create endpoint
+
+- Name tag - optional : (EndPoint-Lab)
+
+- Type: chọn EC2 Instance Connect Endpoint
+
+- VPC : Chọn (VPC-Lab)
+
+- Subnet : Chọn subnet triển khai Application (App-Subnet-1 hoặc App-Subnet-2)
+
+- Create endpoint
