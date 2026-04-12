@@ -787,3 +787,129 @@ Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
 ```
 - nhớ nhấn nút add ở mỗi row
 - Sau đó Save
+
+# Deploy BE Best practive với VPC
+
+## Layer Public Subnet
+
+1. Triển khai VPC:
+
+1.1 Tạo VPC (Create VPC)
+
+- Điền (Name tag - optional) : VPC-Lab
+
+- Điền (IPv4 CIDR) : 10.0.0.0/16
+
+- Create VPC
+
+1.2 Tạo Internet Gateway (Create internet gateway)
+
+- Đặt (Name tag) : IGW-Lab
+
+- Trên góc bên phải chọn (Action) -> Attach to VPC (VPC-Lab)
+
+1.3 Tạo 2 Nat-Gateway (Create NAT gateway)
+
+1.3.1 Tạo Nat-1
+
+- Đặt (Name - optional) : Nat-Lab-1
+
+- chọn (VPC) : VPC-Lab
+
+- Create NAT gateway
+
+1.3.2 Tạo Nat-2
+
+- Đặt (Name - optional) : Nat-Lab-2
+
+- chọn (VPC) : VPC-Lab
+
+- Create NAT gateway
+
+1.4 Tạo Subnets cho 2 Nat 
+
+1.4.1 Tạo Subnet cho Nat-1 (Create subnet)
+
+- chọn VPC (VPC-Lab)
+
+- Điền (Subnet name): Nat-Subnet-1
+
+- chọn (Availability Zone) : us-east-1a (tuỳ theo vùng và propocal triển khai)
+
+- Điền (IPv4 subnet CIDR block) : 10.0.0.0/24
+
+- Create subnet
+
+1.4.2 Tạo Subnet cho Nat-2 (Create subnet)
+
+- chọn VPC (VPC-Lab)
+
+- Điền (Subnet name): Nat-Subnet-2
+
+- chọn (Availability Zone) : us-east-1b (tuỳ theo vùng và propocal triển khai)
+
+- Điền (IPv4 subnet CIDR block) : 10.0.1.0/24
+
+- Create subnet
+
+1.5 Tạo route tables cho Internet Gateway
+
+- Create route table
+
+- Đặt (Name - optional) : IGW-Route-Table
+
+- chọn (VPC) : VPC-Lab
+
+- Create route table
+
+- Chọn (Edit routes)
+
+- Chọn (Add route) : ở Destination chọn (0.0.0.0/0) ở Target chọn (Internet Gateway và chọn (IGW-Lab) đã tạo ở bước trên)
+
+- Save changes
+
+1.6 Attach 2 Subnet của Nat vào Routes của Internet Gateway 
+
+- Vào (Route tables) của Internet Gateway (IGW-Route-Table)
+
+- ở tab (Subnet associations)
+
+- Chọn (Edit subnet associations)
+
+- ở (Available subnets) gắn Subnet của 2 Nat vào (Nat-Subnet-1, Nat-Subnet-2)
+
+- Save associations
+
+1.7 kiểm tra luồng 
+
+- vào (VPC-Lab) sẽ thấy 1 biểu đồ 
+
+- ở tab (Resource map) khi xem Subnet của 2 Nat sẽ thấy thông tới IGW (chứng tỏ Nat đã có internet)
+
+## Layer Private Subnet (Application - Database)
+
+1.8 Tạo 2 Subnet cho App:
+
+1.8.1 Tạo Subnet cho App-Subnets-1 (Create subnet)
+
+- chọn VPC (VPC-Lab)
+
+- Điền (Subnet name): Nat-Subnet-1
+
+- chọn (Availability Zone) : us-east-1a (tuỳ theo vùng và propocal triển khai)
+
+- Điền (IPv4 subnet CIDR block) : 10.0.0.0/24
+
+- Create subnet
+
+1.8.2 Tạo Subnet cho Nat-2 (Create subnet)
+
+- chọn VPC (VPC-Lab)
+
+- Điền (Subnet name): Nat-Subnet-2
+
+- chọn (Availability Zone) : us-east-1b (tuỳ theo vùng và propocal triển khai)
+
+- Điền (IPv4 subnet CIDR block) : 10.0.1.0/24
+
+- Create subnet
