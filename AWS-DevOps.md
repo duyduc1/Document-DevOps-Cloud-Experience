@@ -1019,3 +1019,128 @@ Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
 - Subnet : Chọn subnet triển khai Application (App-Subnet-1 hoặc App-Subnet-2)
 
 - Create endpoint
+
+## Aurora and RDS
+
+### Tạo DB MySQL RDS với DB Subnet 
+
+1. Tạo (Subnet groups)
+
+- Create DB subnet group
+
+- Name (đặt: DB-Subnet)
+
+- Description (đặt: Description hoặc tuỳ mô tả dự án)
+
+- VPC (chọn: VPC-Lab)
+
+- chọn (Availability Zones: us-east-1a và us-east-1b)
+
+- chọn (Subnets: DB-Subnet-1 và DB-Subnet-2)
+
+- Create
+
+2. Tạo Database (cụm master)
+
+- chọn Create database (Full configuration)
+
+- Engine options (chọn Database MySQL có thể chọn các DB khác tuỳ dự án)
+
+- Choose a database creation method (chọn Full configuration)
+
+- DB instance identifier (đặt cụm DB: Database-lab)
+
+- Master username (đặt tên đăng nhập DB: ví dụ root)
+
+- Master password (tự đặt)
+
+- Confirm master password (xác nhận mật khẩu vừa đặt)
+
+- Virtual private cloud (chọn VPC-Lab)
+
+- Availability Zone (chọn us-east-1) // chú thích theo desgin thì cụm master sẽ ở vùng AZ1
+
+- Create Database
+
+3. Tạo Database (cụm replicas)
+
+- click chọn cụm (database-lab)
+
+- click Actions (chọn Create read replica)
+
+- DB instance identifier (đặt: database-lab-repicas)
+
+- Availability Zone (chọn us-east-1b)
+
+- Create read replica
+
+## Application (ALB)
+
+### Tạo Domain cho Application
+
+1. Tạo target group
+
+- Create target group
+
+- Target type (chọn Ip addresses vì triển khai App trên ECS)
+
+- Target group name (đặt: tg-items hoặc tuỳ theo dự án)
+
+- Protocol (HTTP)
+
+- Port (3000 port của service khi chạy)
+
+- VPC (chọn: VPC-Lab)
+
+- Health check path (trỏ tới API mà nó luôn trả về response 200 ví dụ /api/v1/items/product)
+
+- Next qua bước 2
+
+- Create target group
+
+2. Tạo Load Balancers
+
+- Create load balancer
+
+- Load balancer types (chọn : Application Load Balancer (ALB))
+
+- Create
+
+- Load balancer name (đặt : domain-alb hoặc tuỳ theo yêu cầu dự án)
+
+- VPC (chọn VPC-Lab)
+
+- Availability Zones and subnets (chọn cả 2 vùng us-east-1a và us-east-1b)
+
+- Subnet chọn (Nat-subnet-1 và Nat-subnet-2)
+
+- Default action (chọn: Return fixed response)
+
+- Response body - optional (đặt: Not Found) khi không trỏ đúng API sẽ hiển thị Not found
+
+- Create load balancer
+
+3. Add rule
+
+- Sau khi tạo xong ALB ở tab (Listeners and rules (1))
+
+- tích chọn ALB vừa tạo
+
+- chọn Manage rules (Add rule)
+
+- tại Conditions (0 values)
+
+- Add condition (chọn Path)
+
+- điền path API (ví dụ: /api/v1/items/*)
+
+- Target group (chọn target group vừa tạo (tg-items))
+
+- Next
+
+- Priority (đặt số: ví dụ 1)
+
+- Next
+
+- Add rule
+
