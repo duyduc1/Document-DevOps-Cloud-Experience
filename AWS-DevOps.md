@@ -1202,4 +1202,232 @@ Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
 
 - Connection type (chọn : Connect using a Private IP)
 
-- Connect 
+- Connect
+
+- Ở tab Security của EC2 Instance (copy SG của EC2 ví dụ : sg-0a99bb977084ec4af)
+ 
+- Tiếp theo vào RDS
+ 
+- chọn database-lab
+ 
+- ở tab (Connectivity & security) kéo xuống (Security group rules)
+ 
+- click vào Security-group (default (sg-0224501b84cc86f20))
+ 
+- ở Security Group click vào (sg-0224501b84cc86f20)
+ 
+- Edit inbound rules
+ 
+- Add rule
+ 
+- Type (Chọn Custom TCP) , Port range: (3306) và Source add (sg-0a99bb977084ec4af) SG của EC2 // Chú thích chỉ cho những instance hoặc container trong SG này truy cập DB
+ 
+- Trong instance EC2
+ 
+- Clone source code
+ 
+## Cài đặt Docker
+ 
+- nano install-docker.sh
+ 
+``` bash
+#!/bin/bash
+sudo apt update
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install -y docker-ce
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker --version
+docker-compose --version
+```
+ 
+- chmod +x install-docker.sh
+ 
+- bash install-docker.sh
+ 
+## Cài đặt và Setup Database MySQL
+ 
+- sudo apt install mysql-server -y
+ 
+- Vào RDS database (database-lab)
+ 
+- ở Tab Connectivity & security
+ 
+- copy lệnh (ví dụ: mysql -h database-lab.cyf6wcuq0j47.us-east-1.rds.amazonaws.com -P 3306 -u root -p)
+ 
+- Paste vào instance ec2 : mysql -h database-lab.cyf6wcuq0j47.us-east-1.rds.amazonaws.com -P 3306 -u root -p
+ 
+- Điền mật khẩu
+ 
+``` sql
+create database testdb;
+show databases;
+```
+ 
+- Edit file .env hoặc các file có chứa config Database
+ 
+- thay đổi thông tin bên trong file confi
+ 
+``` env
+RDS_ENDPOINT=database-lab.cyf6wcuq0j47.us-east-1.rds.amazonaws.com
+RDS_PORT=3306
+RDS_USERNAME=root
+RDS_PASSWORD=M1aT4Tt7aeXc
+RDS_DB_NAME=testdb
+```
+ 
+## Chạy chương trình với Docker
+ 
+* Dùng các lệnh Docker để build Images
+ 
+``` bash
+docker-compose up -d --build
+docker ps -a
+docker images
+```
+## Cài đặt AWS
+ 
+- nano install-aws.sh
+ 
+``` bash
+sudo apt install unzip
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+aws --version
+```
+ 
+### configure aws
+ 
+- Security credentials (nhấn vào name trên góc phải màn hình)
+ 
+- Tìm Create access key (nhấn Create access key) nhớ phải lưu thông tin access key
+ 
+* Trong instance EC2
+ 
+- aws configure
+ 
+``` bash
+aws configure
+ 
+### điền thông tin key
+Access Key ID: <you-access-key-id>
+Secret Access Key: <your-secret-key-access>
+region name: <your-region>
+output format: json
+```
+ 
+aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <account-id>.dkr.ecr.<region>.amazonaws.com
+ 
+## Setup ECR
+ 
+- Create a repository (Craete)
+ 
+- ở Repository name (đặt tên Repo: item-task)
+ 
+- Create
+ 
+- Copy lại Repository name URI (có dạng: 919446726176.dkr.ecr.us-east-1.amazonaws.com/items-task)
+ 
+* Trong instance EC2
+ 
+- Sau khi build xong images
+ 
+``` bash
+docker images
+docker tag nest-item-api:latest 919446726176.dkr.ecr.us-east-1.amazonaws.com/items-task:latest
+docker push 919446726176.dkr.ecr.us-east-1.amazonaws.com/items-task:latest
+```
+ 
+* Check lại trong Repository name của ECR
+ 
+- Check trong items-task đã có images chưa nếu có sẽ thấy Image tags (latest)
+ 
+- Vào ECR Repository Name (item-task)
+ 
+- Click chọn tag latest copy URI (919446726176.dkr.ecr.us-east-1.amazonaws.com/items-task:latest)
+ 
+## Deploy Setup ECS
+ 
+### Tạo Cluster
+ 
+- Vào Amazon Elastic Container Service
+ 
+- Cluster (Create Cluster)
+ 
+- Cluster name (ví dụ: Lab-Cluster)
+ 
+- Create
+ 
+### Tạo Task definitions
+ 
+- Create new task definition
+ 
+- Task definition family (ví dụ: items-task)
+ 
+- Task role (chọn: ecsTaskExcutionRole)
+ 
+- Name (đặt tên container: item-container)
+ 
+* Trong ECS
+ 
+- Image URI (dán : 919446726176.dkr.ecr.us-east-1.amazonaws.com/items-task:latest)
+ 
+- Container port (port của container: 3000)
+ 
+- Port name (ví dụ: port-item)
+ 
+- CPU, Memory hard limit, Memory soft limit (để mặc định hoặc tùy chỉnh theo dự án)
+ 
+- Add environment variable (phải add đủ thông tin ENV trong file env hoặc file config)
+ 
+- điền Key và Value
+ 
+``` bash
+Key: RDS_ENDPOINT | Value: database-lab.cyf6wcuq0j47.us-east-1.rds.amazonaws.com
+Key: RDS_PORT | Value: 3306
+Key: RDS_USERNAME | Value: root
+Key: RDS_PASSWORD | Value: M1aT4Tt7aeXc
+Key: RDS_DB_NAME | Value: testdb
+```
+
+- Create
+ 
+* Quay lại cụm cluster vừa tạo (Lab-Cluster)
+ 
+- ở tab Services
+ 
+- chọn Create
+ 
+- Task definition family (chọn task definitions vừa tạo: items-task)
+ 
+* Kéo xuống Networking
+ 
+- VPC : (chọn VPC-Lab)
+ 
+- Subnets : chỉ đề lại 2 Subnets (App-Subnet-1 và App-Subnet-2) theo chuẩn design task sẽ run ở 2 AZ này
+ 
+- Security group name (chọn Security group trùng với EC2 Instance đã tạo ở trên (sg-0a99bb977084ec4af))
+ 
+* Kéo xuống Load balancing
+ 
+- tích chọn Use load balancing
+ 
+- Application Load Balancer (tích chọn Use an existing load balancer)
+ 
+- Load balancer (chọn ALB đã tạo trước đó : doamin-alb)
+ 
+- Listener (tích chọn Use an existing listener)
+ 
+- ở Listener chọn (HTTP:80)
+ 
+- Target group (tích chọn Use an existing target group)
+ 
+- Target group name (chọn tg-items đã tạo trước đó trong target group)
+ 
+- Create
