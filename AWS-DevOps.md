@@ -1431,3 +1431,5 @@ Key: RDS_DB_NAME | Value: testdb
 - Target group name (chọn tg-items đã tạo trước đó trong target group)
  
 - Create
+
+### API Gateway Setup
