@@ -131,10 +131,10 @@ nano /etc/systemd/system/backend.service
 ### nội dung bên trong file backend.service
 [Service]
 Type=simple
-User=backend
+User=root
 Restart=Always
-WorkingDirectory=/home/user/project/ticker-car
-ExecStart= java -jar target/SpringSecurity.JWT-0.0.1-SNAPSHOT.jar
+WorkingDirectory=/root/path/project/ticker-car // Thư mục làm việc của dự án
+ExecStart=java -jar target/SpringSecurity.JWT-0.0.1-SNAPSHOT.jar
 StandardOutput=append:/var/log/backend/backend.log     
 StandardError=append:/var/log/backend/backend.err
 
