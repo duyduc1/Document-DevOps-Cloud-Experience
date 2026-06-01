@@ -885,10 +885,10 @@ cat ~/.ssh/github_actions
 | Secret Name     | Giá trị |
 |-----------------|--------|
 | SSH_PRIVATE_KEY | Nội dung private key vừa copy |
-| SSH_HOST        | IP hoặc domain server (vd: 123.456.789.0) |
-| SSH_USER        | User SSH (vd: ubuntu, root) |
+| SSH_HOST        | IP Public (vd: 123.456.789.0) |
+| SSH_USER        | User SSH (vd: root) |
 | SSH_PORT        | Port SSH (thường là 22) |
-| SSH_PATH        | Đường dẫn dự án trên server (vd: /var/www/my-nest-app) |
+| SSH_PATH        | Đường dẫn dự án trên server (vd: /root/fullstack/nest-task-ecs/nest-order-api) |
 
 ## BƯỚC 3: Cấu trúc thư mục
 
